@@ -3,16 +3,17 @@ const hbs = require('hbs');
 
 var app = express();
 
-app.listen(3000, () => {
-    console.log('server is up and running on port 3000');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`server is up and running on port ${port}`);
 });
 
 
 app.set('view engine', hbs); // set handlebars to be your view engine for dynamic templates
 app.use((req, res, next) => {
     console.log(`${req.url} : ${new Date().toDateString()}`);
-    res.render('maintanence.hbs');
-    //next();
+   // res.render('maintanence.hbs');
+    next();
 })
 
 
