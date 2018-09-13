@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Rest API's Page</title>
+</head>
+<body>
+    <h1>We support following services</h1>
+    <p>
+        <li>POST /write - takes a json array and saves it as a json in fileSystem</li>
+        <li>GET /readFile - reads the json file</li>
+        <li>PUT /update - updates a json element by id. Pass in id and other fields to update as query parameters</li>
+        <li>DELETE /deleteFile - deletes the json file. Pass in 'data.json' as fileName in query parameters</li>
+    </p>
+    <p>
+        Sample json 
+        [
+	{
+		"id": 1,
+		"name": "neerk",
+		"age": 23
+	},
+	{
+		"id": 2,
+		"name": "logad",
+		"age": 23
+	},
+	{
+		"id": 3,
+		"name": "sravd",
+		"age": 23
+	},
+	{
+		"id": 4,
+		"name": "saie",
+		"age": 23
+	}
+]
+    </p>
+</body>
+</html>
