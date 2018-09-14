@@ -1,90 +1,95 @@
 const fs = require('fs');
+const fileName = 'data.json';
 
 function writeToFile(data, res) {
-    fs.writeFile('data.json', JSON.stringify(data), function (err) {
+    data.forEach((element, i) => {
+        element.id = i+1;
+    })
+    console.log(JSON.stringify(data));
+    fs.writeFile(fileName, JSON.stringify(data), function (err) {
         if (err) {
-            res.status(500).send('Error occured while writing to file');
+            res.status(500).send({ message: 'Error occured while writing to file' });
         } else {
-            res.status(201).send('Data appended to file - data.json');
+            res.status(201).send({ message: 'Created' });
         }
     });
 }
 
-function deleteFile(fileName, res) {
+function deleteFile(res) {
     fs.stat(fileName, (err) => {
         if (err == null) {
             fs.unlink(fileName, (err) => {
                 if (err) {
-                    res.status(500).send('File could not be deleted');
+                    res.status(500).send({ message: 'File could not be deleted' });
                 } else {
-                    res.status(200).send('File deleted');
+                    res.status(200).send({ message: 'File deleted' });
                 }
 
             });
         }
         else if (err.code === 'ENOENT') {
-            res.status(200).send('File already deleted; doesnt exist anymore');
+            res.status(200).send({ message: 'File already deleted; doesnt exist anymore' });
         }
     })
 }
 
-function readFile(res){
-    fs.readFile('data.json', (err, data) => {
-        if(err){
-            res.status(200).send('data.json file doesnt exist');
-        }else{
+function readFile(res) {
+    fs.readFile(fileName, (err, data) => {
+        if (err) {
+            res.status(400).send({ message: 'Bad request: file not found' });
+        } else {
             res.status(200).send(JSON.parse(data));
         }
     })
 }
 
-function updateData(id, name, age, res){
+function updateData(id, name, age, res) {
     var found = false;
     readData().then(response => {
         response.forEach(element => {
-            if(id === element.id){
-                if(name)
-                element.name = name;
-                if(age)
-                element.age = age;
+            if (id === element.id) {
+                if (name)
+                    element.name = name;
+                if (age)
+                    element.age = age;
                 found = true;
                 console.log(element);
-            }else{
+            } else {
                 console.log(element);
             }
         });
-        if(found){
-            fs.writeFile('data.json', JSON.stringify(response), function (err) {
+        if (found) {
+            fs.writeFile(fileName, JSON.stringify(response), function (err) {
                 if (err) {
-                    res.status(500).send('Error occured while updating');
+                    res.status(500).send({ message: 'Error occured while updating' });
                 } else {
-                    res.status(204).send('Updated succesfully');
+                    res.status(204).send({ message: 'Updated' });
                 }
             });
-        }else{
-            res.status(400).send('Bad request: id not found');
+        } else {
+            res.status(400).send({ message: 'Bad request: id not found' });
         }
 
-       
+
     }).catch(error => {
-        res.status(200).send('data.json file doesnt exist');
+        res.status(200).send({ message: 'Bad request: file not found' });
     })
- 
+
 }
 
-function readData(){
-    return new Promise(function(resolve, reject){
-        fs.readFile('data.json', (err, data) => {
-            if(err){
+function readData() {
+    return new Promise(function (resolve, reject) {
+        fs.readFile(fileName, (err, data) => {
+            if (err) {
                 reject(err);
-            }else{
+            } else {
                 resolve(JSON.parse(data));
             }
         })
     });
 }
 
-// delete by id
+
 module.exports = {
     writeToFile: writeToFile,
     deleteFile: deleteFile,
