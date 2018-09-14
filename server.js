@@ -57,6 +57,13 @@ app.put('/update', (req, res) => {
     var id = parseInt(req.query.id, 10);
     var name = req.query.name;
     var age = parseInt(req.query.age, 10);
-    console.log(id, name, age);
+    fsHelpers.updateData(id, name, age, res);
+})
+
+app.put('/updateViaBody', (req,res) => {
+    var body = req.body;
+    var id = body.id;
+    var name = body.name;
+    var age = body.age;
     fsHelpers.updateData(id, name, age, res);
 })
