@@ -5,7 +5,6 @@ function writeToFile(data, res) {
     data.forEach((element, i) => {
         element.id = i+1;
     })
-    console.log(JSON.stringify(data));
     fs.writeFile(fileName, JSON.stringify(data), function (err) {
         if (err) {
             res.status(500).send({ message: 'Error occured while writing to file' });
@@ -36,7 +35,7 @@ function deleteFile(res) {
 function readFile(res) {
     fs.readFile(fileName, (err, data) => {
         if (err) {
-            res.status(400).send({ message: 'Bad request: file not found' });
+            res.status(404).send({ message: 'Bad request: file not found' });
         } else {
             res.status(200).send(JSON.parse(data));
         }
@@ -53,9 +52,7 @@ function updateData(id, name, age, res) {
                 if (age)
                     element.age = age;
                 found = true;
-                console.log(element);
             } else {
-                console.log(element);
             }
         });
         if (found) {
@@ -72,7 +69,7 @@ function updateData(id, name, age, res) {
 
 
     }).catch(error => {
-        res.status(200).send({ message: 'Bad request: file not found' });
+        res.status(404).send({ message: 'Bad request: file not found' });
     })
 
 }
@@ -89,10 +86,35 @@ function readData() {
     });
 }
 
+function deleteById(id, res){
+    var found = false;
+    readData().then(data => {
+        data.forEach(element => {
+            if(id === element.id){
+                data.splice(data.indexOf(element),1);
+                found = true;
+            }
+        })
+        if(found){
+            fs.writeFile(fileName, JSON.stringify(data), function (err) {
+                if (err) {
+                    res.status(500).send({ message: 'Error occured while updating' });
+                } else {
+                    res.status(204).send({ message: 'Deleted' });
+                }
+            });
+        }else{
+            res.status(400).send({ message: 'Bad request: id not found' });
+        }
+    }).catch(error => {
+        res.status(404).send({ message: 'Bad request: file not found' });
+    })
+}
 
 module.exports = {
     writeToFile: writeToFile,
     deleteFile: deleteFile,
     readFile: readFile,
-    updateData: updateData
+    updateData: updateData,
+    deleteById: deleteById
 }

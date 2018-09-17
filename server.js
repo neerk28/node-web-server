@@ -53,6 +53,10 @@ app.put('/update', (req, res) => {
     fsHelpers.updateData(id, name, age, res);
 });
 
-app.delete('/delete', (req, res) => {
+app.delete('/deleteFile', (req, res) => {
     fsHelpers.deleteFile(res);
+});
+
+app.delete('/delete/:id', (req, res) => {
+    fsHelpers.deleteById(parseInt(req.params.id,10), res);
 });
