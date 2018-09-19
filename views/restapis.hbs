@@ -7,11 +7,13 @@
 <body>
     <h1>Following endpoints are available</h1>
     <p>
-        <li>POST /create - takes a json array and saves it as a json in fileSystem</li>
-        <li>GET /read - reads the json file</li>
-		<li>PUT /update - updates a json element by id. Pass in id and other fields to update as json in request body</li>
-        <li>DELETE /delete/:id - deletes the json element by id</li>
-		<li>DELETE /deleteFile - deletes the entire json file</li>
+        <li>POST /users - takes a json array and saves it in fileSystem</li>
+        <li>GET /users - get the data in the file</li>
+		<li>GET /users - get the data in the file based on id</li>
+		<li>PUT /users - updates a json element by id. Pass in id and other fields to update as json in request body</li>
+        <li>DELETE /users - deletes the data in the file</li>
+		<li>DELETE /users/:id - deletes the json element in the file based on id</li>
+		<li>DELETE /deleteFile - deletes the json file itself</li>
     </p>
     <p>
         Sample json 

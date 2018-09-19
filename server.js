@@ -37,15 +37,23 @@ app.get('/apis', (req, res) => {
     res.render('restapis.hbs');
 });
 
-app.post('/create', (req, res) => {
+//create a file - json array
+app.post('/users', (req, res) => {
     fsHelpers.writeToFile(req.body, res);
 });
 
-app.get('/read', (req, res) => {
+//read entire file
+app.get('/users', (req, res) => {
     fsHelpers.readFile(res);
 });
 
-app.put('/update', (req, res) => {
+//read based on id
+app.get('/users/:id', (req, res) => {
+    fsHelpers.readFileById(parseInt(req.params.id, 10), res);
+});
+
+//update based on id
+app.put('/users', (req, res) => {
     var body = req.body;
     var id = body.id;
     var name = body.name;
@@ -53,10 +61,17 @@ app.put('/update', (req, res) => {
     fsHelpers.updateData(id, name, age, res);
 });
 
+//deletes the file itself
 app.delete('/deleteFile', (req, res) => {
     fsHelpers.deleteFile(res);
 });
 
-app.delete('/delete/:id', (req, res) => {
+//delete based on id
+app.delete('/users/:id', (req, res) => {
     fsHelpers.deleteById(parseInt(req.params.id,10), res);
+});
+
+//delete all the elements one by one
+app.delete('/users', (req, res) => {
+    fsHelpers.deleteAll(res);
 });
