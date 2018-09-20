@@ -1,17 +1,35 @@
 const fs = require('fs');
 const fileName = 'data.json';
 
+
 function writeToFile(data, res) {
-    data.forEach((element, i) => {
-        element.id = i + 1;
-    })
-    fs.writeFile(fileName, JSON.stringify(data), function (err) {
-        if (err) {
-            res.status(500).send({ message: 'Error occured while writing to file' });
-        } else {
-            res.status(201).send({ message: 'Created' });
-        }
-    });
+    if (typeof (data.age) === 'number' && typeof (data.name) === 'string') {
+        var found = false;
+        readData().then(response => {
+            response.forEach(element => {
+                if (element.name === data.name) {
+                    found = true;
+                }
+            });
+            if (!found) {
+                data.id = Date.now();
+                response.push(data);
+                fs.writeFile(fileName, JSON.stringify(response), function (err) {
+                    if (err) {
+                        res.status(500).send({ message: 'Error occured while writing to file' });
+                    } else {
+                        res.status(201).send({ message: 'Created' });
+                    }
+                });
+            } else {
+                res.status(400).send({ message: 'Bad request: name already exists' })
+            }
+        }).catch(error => {
+            res.status(404).send({ message: 'Bad request: file not found' });
+        });
+    } else {
+        res.status(400).send({ message: 'Bad request: invalid input' });
+    }
 }
 
 function deleteFile(res) {
